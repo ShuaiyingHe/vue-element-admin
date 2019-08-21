@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">用户登录</h3>
       </div>
 
       <el-form-item prop="username">
@@ -45,22 +45,8 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">点击登录</el-button>
 
-      <div style="position:relative">
-        <div class="tips">
-          <span>Username : admin</span>
-          <span>Password : any</span>
-        </div>
-        <div class="tips">
-          <span style="margin-right:18px;">Username : editor</span>
-          <span>Password : any</span>
-        </div>
-
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          Or connect with
-        </el-button>
-      </div>
     </el-form>
 
     <el-dialog title="Or connect with" :visible.sync="showDialog">
@@ -70,26 +56,33 @@
       <br>
       <social-sign />
     </el-dialog>
+    <div style="width:300px;margin:0 auto; padding:20px 0;">
+      <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=32050602010844" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;position:absolute;bottom:10%;"><img src="../../static/recordIcon.png" style="float:left;"><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">苏公网安备 32050602010844号</p></a>
+    </div>
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+// import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
 
 export default {
   name: 'Login',
   components: { SocialSign },
   data() {
+    // let声明变量一定在声明后使用 并且let变量只在代码块中有效
+    // const声明一个只读的常量 同样只能在代码块中有效
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
+      if (value.trim().length < 1) {
+        this.loginForm.username = ''
         callback(new Error('Please enter the correct user name'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
+      if (value.trim().length < 6) {
+        this.loginForm.password = ''
         callback(new Error('The password can not be less than 6 digits'))
       } else {
         callback()
@@ -164,7 +157,11 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
+          // store 存储的是vuex的全局数据  在index.js里声明的
+          // vuex是专门为vue.js提供的状态管理模式 采用集中存储管理应用的所有组件的的状态
+          // 当我们点击一个按钮 他会触发(dispatch)一个action, 随后action会执行(commit)一个mutation
+          // mutation会立即改变state, state改变以后我们的页面就会state获取数据
+          this.$store.dispatch('/8080/login', this.loginForm)
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
