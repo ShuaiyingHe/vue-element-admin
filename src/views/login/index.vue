@@ -161,7 +161,7 @@ export default {
           // vuex是专门为vue.js提供的状态管理模式 采用集中存储管理应用的所有组件的的状态
           // 当我们点击一个按钮 他会触发(dispatch)一个action, 随后action会执行(commit)一个mutation
           // mutation会立即改变state, state改变以后我们的页面就会state获取数据
-          this.$store.dispatch('/8080/login', this.loginForm)
+          this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
