@@ -34,12 +34,14 @@ router.beforeEach(async(to, from, next) => {
         try {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
+          // await 表示等待后面的函数运行完并有了结果之后才能执行下面的代码  async 则表示异步函数 不阻塞
           const { roles } = await store.dispatch('user/getInfo')
 
           // generate accessible routes map based on roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 
           // dynamically add accessible routes
+          // 动态添加路由
           router.addRoutes(accessRoutes)
 
           // hack method to ensure that addRoutes is complete

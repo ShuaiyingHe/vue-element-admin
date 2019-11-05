@@ -107,6 +107,7 @@ export default {
   },
   watch: {
     $route: {
+      /* $route表示当前激活的路由的状态信息 query是vue.router的路由对象属性, redirect是路由的重定向属性 */
       handler: function(route) {
         const query = route.query
         if (query) {
@@ -163,6 +164,8 @@ export default {
           // mutation会立即改变state, state改变以后我们的页面就会state获取数据
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
+              // this.$router.push 实现路由跳转(修改url完成跳转) 可以直接跟url地址或者对象
+              // 对于路径 /foo?user=1，则有 $route.query.user == 1 没有查询参数则为空对象
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
             })
